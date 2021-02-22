@@ -2,6 +2,7 @@ import time, csv, os
 from libraries.selenium import _selenium, _webelem
 from libraries.data     import _locators
 from libraries.config   import _config
+from libraries.database import _tiny_db
 from selenium.webdriver.remote.webelement import WebElement
 
 
@@ -105,20 +106,31 @@ def save_all(url:str, tweets:list):
     index       = url.rstrip()[:-1].rfind('/') + 1
     tweet_id    = url[index:]
     this_file   = os.path.dirname(os.path.abspath(__file__))
-    folder_path = os.path.join(this_file, 'export')
-    path        = os.path.join(folder_path, f'{tweet_id}.csv')
+    csv_path    = os.path.join(this_file, 'export', f'{tweet_id}.csv')
+    tdb_path    = os.path.join(this_file, 'db',     f'{tweet_id}.json')
 
-    os.makedirs(folder_path, exist_ok=True)
-    if len(tweets) == 0:
-        print(f'Could not find any replies for {url}')
-    else:
+    save_all_to_db(tdb_path, tweets)
+    save_all_to_csv(csv_path, tweets)
+
+
+def save_all_to_csv(path:str, tweets:list):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    if len(tweets) > 0:
         with open(path, 'w', encoding='utf-8') as f:
             w = csv.writer(f, quoting=csv.QUOTE_ALL)
             w.writerow(['datetime', 'short_name', 'full_name', 'reply_to', 'text', 'url'])
             for i in tweets:
                 w.writerow([i['datetime'], i['short_name'], i['full_name'], i['reply_to'], i['text'], i['url']])
 
-        
+
+def save_all_to_db(name:str, tweets:list):
+    db = _tiny_db(name, clear=True)
+
+    if len(tweets) > 0:
+        db.insert_multiple(tweets)
+
+
 def save_text(file, text):
     try:
         with open(file, 'w') as f:

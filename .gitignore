@@ -1,4 +1,7 @@
 /.DS_Store
 /.vscode
+/archive
+/db
 /export
 /geckodriver.log
+*_pycache_*
