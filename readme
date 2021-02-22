@@ -9,7 +9,7 @@ Requirements:
 
 
 How to use:
-    1. Enter URLs of tweets in readme.txt
+    1. Enter URLs of tweets in config.ini
     
     2. Run download.py 
        Tweet information will be saved under /export/{tweet id}.csv
