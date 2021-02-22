@@ -1,4 +1,16 @@
 Requirements:
-    1. pip install selenium
-    2. install Firefox and the Firefox webdriver
+    1. Python 3.x
+
+    2. Install Selenium using command:
+       pip install selenium
+
+    3. install Firefox and the Firefox webdriver
        https://github.com/mozilla/geckodriver/releases
+
+
+How to use:
+    1. Enter URLs of tweets in readme.txt
+    
+    2. Run download.py 
+       Tweet information will be saved under /export/{tweet id}.csv
+       Existing files will be overwritten.
