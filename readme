@@ -11,9 +11,16 @@ Requirements:
        https://github.com/mozilla/geckodriver/releases
 
 
+Notes
+   Tested only on Mac but should work on other platforms as well.
+
+
 How to use:
     1. Enter URLs of tweets in config.ini
     
-    2. Run download.py 
+    2. Run download.py
+       It may be necessary to run it several times until no
+       new tweets are found.
+
+    3. Run export.py
        Tweet information will be saved under /export/{tweet id}.csv
-       Existing files will be overwritten.

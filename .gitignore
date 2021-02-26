@@ -5,3 +5,4 @@
 /export
 /geckodriver.log
 *_pycache_*
+libraries/.DS_Store

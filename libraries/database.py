@@ -5,8 +5,9 @@ from tinydb import Query, where, TinyDB
 
 class _tiny_db(object):
     def __init__(self, file, clear=False):
-        self.folder = os.path.dirname(file)
-        self.file   = file
+        self.db:TinyDB = None
+        self.folder    = os.path.dirname(file)
+        self.file      = file
 
         #prepare path to database
         if not self.file.endswith('.json'): self.file += '.json'
