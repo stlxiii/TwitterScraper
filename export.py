@@ -47,7 +47,7 @@ def save_all_to_csv(path:str, tweets:list):
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     if len(tweets) > 0:
-        with open(path, 'w', encoding='utf-8') as f:
+        with open(path, 'w', encoding='utf-8', newline='') as f:
             w = csv.writer(f, quoting=csv.QUOTE_ALL)
             w.writerow(['datetime', 'short_name', 'full_name', 'reply_to', 'text', 'url'])
             for i in tweets:
