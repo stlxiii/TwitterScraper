@@ -1,7 +1,7 @@
-import csv, os
+import csv, os, pkg_resources
 from   libraries.config   import _config
 from   libraries.database import _tiny_db
-
+pkg_resources.require("TinyDB==4.4.0")
 
 config   = _config()
 

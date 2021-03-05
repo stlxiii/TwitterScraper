@@ -1,10 +1,11 @@
-import time, os
+import time, os, pkg_resources
 from   libraries.selenium import _selenium, _webelem
 from   libraries.data     import _locators
 from   libraries.config   import _config
 from   libraries.database import _tiny_db
 from   selenium.webdriver.remote.webelement import WebElement
-
+pkg_resources.require("Selenium==3.141.0")
+pkg_resources.require("TinyDB==4.4.0")
 
 b        = _selenium()
 locators = _locators()
@@ -22,10 +23,10 @@ def _main():
         if url is not None and url.lower()[:4] == 'http':
             old_tweets = get_saved_tweets(url)
             print(f'Scraping {url}\nPreviously saved: {len(old_tweets)}')
-            print('Searching ... ')
+            print('Searching ', end='', flush=True)
 
             new_tweets = scrape_tweets(url, old_tweets)
-            print('Done!')
+            print('\nDone!')
             print(f'Found {len(new_tweets)} new tweet(s).\n')
 
             save_all(url, new_tweets)
@@ -58,6 +59,7 @@ def scrape_tweets(url:str, saved_tweets:list):
                 fails += 1
 
             b.scroll_with_keypress(locators.first_tweet)
+            print('.', end='', flush=True)
             time.sleep(1)
 
     except Exception as ex:

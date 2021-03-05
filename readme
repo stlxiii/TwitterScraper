@@ -2,10 +2,10 @@ Requirements:
     1. Python 3.x
 
     2. Install TinyDB using command:
-       pip install tinydb
+       pip install tinydb==4.4.0
 
     3. Install Selenium using command:
-       pip install selenium
+       pip install selenium==3.141.0
 
     4. install Firefox and the Firefox webdriver
        https://github.com/mozilla/geckodriver/releases

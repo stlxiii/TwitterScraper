@@ -27,7 +27,7 @@ class _tiny_db(object):
         self.insert          = self.db.insert
         self.insert_multiple = self.db.insert_multiple
         self.update          = self.db.update
-        self.purge           = self.db.purge
+        self.truncate        = self.db.truncate
         self.remove          = self.db.remove
         self.search          = self.db.search
         self.all             = self.db.all
