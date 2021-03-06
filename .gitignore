@@ -3,6 +3,7 @@
 /archive
 /db
 /export
+/logs
 /geckodriver.log
 *_pycache_*
 libraries/.DS_Store

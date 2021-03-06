@@ -1,36 +1,42 @@
 import time, os, pkg_resources
 from   libraries.selenium import _selenium, _webelem
 from   libraries.data     import _locators
+from   libraries.log      import _log
 from   libraries.config   import _config
 from   libraries.database import _tiny_db
 from   selenium.webdriver.remote.webelement import WebElement
 pkg_resources.require("Selenium==3.141.0")
 pkg_resources.require("TinyDB==4.4.0")
 
-b        = _selenium()
+
 locators = _locators()
 config   = _config()
-
+log      = _log()
+b        = _selenium(log=log)
 
 def _main():
-    print('')
     done = False
     i    = 0
 
+    log.debug('Starting program')
     while not done:
         i  += 1
+        log.debug(f'\nTweet{i}')
+        
         url = config.get_key('general', f'tweet{i}')
         if url is not None and url.lower()[:4] == 'http':
+            log.debug(f'is URL {url}')
             old_tweets = get_saved_tweets(url)
-            print(f'Scraping {url}\nPreviously saved: {len(old_tweets)}')
+            log.print(f'Scraping {url}\nPreviously saved: {len(old_tweets)}')
             print('Searching ', end='', flush=True)
 
             new_tweets = scrape_tweets(url, old_tweets)
             print('\nDone!')
-            print(f'Found {len(new_tweets)} new tweet(s).\n')
+            log.print(f'Found {len(new_tweets)} new tweet(s).\n')
 
             save_all(url, new_tweets)
         else:
+            log.print(f'Not an URL: {url}')
             done = True
     print('Work complete!')
 
@@ -84,6 +90,8 @@ def add_tweet(saved_tweets:list, tweets:list, url:str, element:WebElement):
         d['datetime']     = find_sub_element(e, locators.datetime,   'datetime')
 
         if d['text'] != '' and d['url'] != '' and is_new(saved_tweets+tweets, d['url']):
+            log.debug(f'** woohoo new tweet! **')
+            log.debug(d)
             tweets.append(d)
 
 

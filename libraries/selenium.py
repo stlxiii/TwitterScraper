@@ -7,13 +7,20 @@ from selenium.webdriver.common.keys import Keys as keys
 
 
 class _selenium(object):
-    def __init__(self, driver=None):
+    def __init__(self, driver=None, log=None):
         self.driver = driver
         self.timeout = 5
-        self.debug = False
+
+        if log is None:
+            self.print = print
+            self.debug = print
+        else:
+            self.print = log.print
+            self.debug = log.debug
 
 
     def click(self, locator, timeout=None):
+        self.debug(f'Clicking on {locator} with a timeout of {timeout}')
         if timeout is None: timeout = self.timeout
         try:
             if self.wait(locator, timeout):
@@ -24,6 +31,7 @@ class _selenium(object):
             else:
                 return False
         except Exception as ex:
+            self.debug(ex)
             traceback.print_exception(type(ex), ex, ex.__traceback__)
             return False
     
@@ -40,9 +48,11 @@ class _selenium(object):
 
 
     def delete_class(self, c):
+        self.debug(f'Deleting class {c}')
         try:
             self.driver.execute_script('document.getElementsByClassName("{}")[0].remove();'.format(c))
-        except: pass
+        except Exception as ex:
+            self.debug(ex)
 
 
     def enter_text(self, locator, *text):
@@ -55,17 +65,21 @@ class _selenium(object):
         try:
             elems = self.driver.find_elements_by_xpath(x)
             if len(elems) == 0:
-                if self.debug: print(f'Element {x} not found')
+                self.debug(f'Element {x} not found')
+                self.debug(f'{x} does not exist')
                 return False
             else:
-                if self.debug: print(f'Element {x} found!')
+                self.debug(f'Element {x} found!')
+                self.debug(f'{x} exists')
                 return True
         except Exception as ex:
-            if self.debug: traceback.print_exception(type(ex), ex, ex.__traceback__)
+            self.debug(f'{x} does not exist')
+            self.debug(ex)
             return False
 
 
     def find_elements_by_xpath(self, xpath) -> list:
+        self.debug(f'Looking for xpath {xpath}')
         try:
             return self.driver.find_elements_by_xpath(xpath)
         except:
@@ -91,18 +105,25 @@ class _selenium(object):
     def get_all(self, locator):
         try:
             if self.exists(locator):
-                return self.driver.find_elements_by_xpath(locator)
+                x = self.driver.find_elements_by_xpath(locator)
+                self.debug(f'found {len(x)} when looking for {locator}')
+                return x
             else:
+                self.debug(f'Found nothing when looking for {locator}')
                 return []
         except Exception as ex:
+            self.debug(f'error looking for {locator} : {ex}')
             return []
 
 
     def get_first(self, locator) -> WebElement:
         try:
             if self.exists(locator):
-                return self.driver.find_elements_by_xpath(locator)[0]
+                x =  self.driver.find_elements_by_xpath(locator)[0]
+                self.debug(f'found {len(x)} when looking for {locator}')
+                return x
         except Exception as ex:
+            self.debug(f'error looking for {locator} : {ex}')
             return None
 
 
@@ -127,7 +148,7 @@ class _selenium(object):
                 break
             am_alright = True
         except Exception as fff:
-            print(fff)
+            self.print(fff)
             am_alright = False
         finally:
             return am_alright
@@ -135,6 +156,7 @@ class _selenium(object):
 
     def is_visible(self, xpath):
         '''Returns wheter the first found element for the specified xpath is visible or not'''
+        self.debug(f'wondering if this is visible: {xpath}')
         well_is_it = False
         try:
             for i in self.driver.find_elements_by_xpath(xpath):
@@ -143,9 +165,11 @@ class _selenium(object):
                 else:
                     well_is_it = False
                 break
-        except:
+        except Exception as ex:
+            self.debug(f'An error occured trying to figure this out : {ex}')
             well_is_it = False
         finally:
+            self.debug('It is visible: {xpath}')
             return well_is_it
 
 
@@ -155,6 +179,7 @@ class _selenium(object):
 
 
     def scroll_down(self, distance=None):
+        self.debug('Scrolling down')
         '''if no distance (measured in pixels) is specified, will scroll down
            the entire length of the page.'''
         if distance is None:
@@ -164,6 +189,7 @@ class _selenium(object):
 
 
     def scroll_with_keypress(self, xpath, n=1, k=keys.END):
+        self.debug('Scrolling down using key presses' )
         e:WebElement = None
         try:
             if self.exists(xpath):
@@ -175,6 +201,7 @@ class _selenium(object):
 
 
     def wait(self, xpath, timeout=None):
+        self.debug(f'waiting untils this is visible : {xpath}')
         if timeout is None: timeout = self.timeout
         maxwait = timeout * 2
         if maxwait <= 0: maxwait = 1
@@ -182,11 +209,12 @@ class _selenium(object):
             try:
                 e = self.driver.find_element_by_xpath(xpath)
                 if e.is_displayed():
+                    self.debug(f'Found {xpath}')
                     return True
             except: pass
             finally:
                 time.sleep(0.5)
-        print(f'Could not find element : {xpath}')
+        self.print(f'Could not find element : {xpath}')
         return False
 
 
