@@ -219,13 +219,22 @@ class _selenium(object):
 
 
 class _webelem(object):
-    def __init__(self, element:WebElement) -> None:
-        self.e = element
+    def __init__(self, element:WebElement, log=None):
+        self.e:WebElement = element
         self.error = None
+        self.log = log
+
+        if log is None:
+            self.print = print
+            self.debug = print
+        else:
+            self.print = log.print
+            self.debug = log.debug
 
 
     def click(self):
         try:
+            self.debug(f'  Clicking {self.e.id}')
             self.e.click()
         except:
             try:
@@ -236,16 +245,22 @@ class _webelem(object):
 
     def get_attribute(self, attribute):
         try:
-            return self.e.get_attribute(attribute)
+            self.debug(f'  Getting attribute "{attribute}" from element {self.e.id}')
+            x = self.e.get_attribute(attribute)
+            self.debug(f'  attribute = {x}')
+            return x
         except Exception as ex:
+            self.debug(f'  error = {ex}')
             self.error = ex
             return ''
 
 
     def find_element_by_xpath(self, locator):
         try:
-            return _webelem(self.e.find_element_by_xpath(locator))
+            self.debug(f'  finding by xpath {locator}')
+            return _webelem(self.e.find_element_by_xpath(locator), self.log)
         except Exception as ex:
+            self.debug(f'  error: {ex}')
             self.error = ex
             return None
 
@@ -261,7 +276,11 @@ class _webelem(object):
     def get_text(self):
         self.error = None
         try:
-            return self.e.text
+            x =  self.e.text
+            y =  x.replace('\n', '')
+            self.debug(f'  text of {self.e.id} = {y}')
+            return x
         except Exception as ex:
+            self.debug(f'  error getting text of {self.e.id} = {ex}')
             self.error = ex
             return ''

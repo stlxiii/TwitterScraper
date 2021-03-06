@@ -56,7 +56,7 @@ def scrape_tweets(url:str, saved_tweets:list):
             more_buttons = b.find_elements_by_xpath(locators.show_replies)
             more_buttons.append(b.find_elements_by_xpath(locators.show_more_replies))
             for i in more_buttons:
-                _webelem(i).click()
+                _webelem(i, log).click()
             
             for e in b.find_elements_by_xpath(locators.tweet):
                 add_tweet(saved_tweets, tweets, url, e)
@@ -77,7 +77,7 @@ def scrape_tweets(url:str, saved_tweets:list):
         
 
 def add_tweet(saved_tweets:list, tweets:list, url:str, element:WebElement):
-    e = _webelem(element)
+    e = _webelem(element, log)
     d = dict()
 
     if e.get_text() != '':
