@@ -58,7 +58,9 @@ def scrape_tweets(url:str, saved_tweets:list):
             for i in more_buttons:
                 _webelem(i, log).click()
             
-            for e in b.find_elements_by_xpath(locators.tweet):
+            replies = b.find_elements_by_xpath(locators.tweet)
+            log.debug(f'Tweets found: {len(replies)}')
+            for e in replies:
                 add_tweet(saved_tweets, tweets, url, e)
             
             if len(tweets) == count_before:
@@ -66,6 +68,7 @@ def scrape_tweets(url:str, saved_tweets:list):
 
             b.scroll_with_keypress(locators.first_tweet)
             print('.', end='', flush=True)
+            log.save_file('source.html', b.driver.page_source, compare_size=True)
             time.sleep(1)
 
     except Exception as ex:

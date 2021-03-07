@@ -30,3 +30,23 @@ class _log(object):
                 f.write ('')
             else:
                 f.write(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' ' + str(text) + '\n')
+
+
+    def save_file(self, name, content, compare_size=False):
+        '''Save a file inside the log folder.  If compare_size is True, 
+           the file will only be overwritten if the new content is larger
+           than the one already written to disk.'''
+        file = os.path.join(self.path, name)
+        size = get_file_len(file) if compare_size else 0
+
+        if len(content) > size:
+            with open(file, 'w') as f:
+                f.write(content)
+
+
+def get_file_len(file):
+    if os.path.exists(file) and os.path.isfile(file):
+        with open(file, 'r') as f:
+            return len(f.read())
+    else:
+        return 0
