@@ -18,12 +18,12 @@ class _config(object):
             self.cp.add_section(section)
 
 
-    def get_key(self, section, key):
+    def get_key(self, section, key, default=None):
         try:
             return self.cp.get(section, key)
         
         except: 
-            return None
+            return default
 
 
     def save_key(self, section, key, value):
