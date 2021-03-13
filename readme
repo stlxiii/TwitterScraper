@@ -1,19 +1,22 @@
-Requirements:
-    1. Python 3.x
+How to install
+    1. Install the latest Python install at https://www.python.org/downloads/
+        Make sure to check the option to add Python to the path.
 
-    2. Install TinyDB using command:
-       pip install tinydb==4.4.0
+    2. Download and extract the project
+        https://github.com/stlxiii/TwitterScraper/archive/master.zip
 
-    3. Install Selenium using command:
-       pip install selenium==3.141.0
+    3. Open a command line / terminal at the extracted "TwitterScraper-master" folder
 
-    4. install Firefox and the Firefox webdriver
-       https://github.com/mozilla/geckodriver/releases
+    4. Run the following commands to install a virtual environement
+        python -m venv .venv
+        .venv\Scripts\activate.bat       (or .venv\Scripts\activate if not on PC)
+        pip install --upgrade pip
+        pip install -r requirements.txt
 
-
-Notes
-   Tested only on Mac but should work on other platforms as well.
-
+    5. Install Firefox and the Firefox webdriver
+        https://github.com/mozilla/geckodriver/releases
+        You can place the webdriver file in ".venv/bin"
+        or anywhere else in the system path
 
 How to use:
     1. Enter URLs of tweets in config.ini
